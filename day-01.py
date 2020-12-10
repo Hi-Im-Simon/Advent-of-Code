@@ -1,4 +1,4 @@
-file = open('c:/Code/Advent of Code/2020/inputs/input1.txt').readlines()
+file = open('c:/Code/Advent of Code/2020/inputs/input-01.txt').readlines()
 file = [int(i[:-1]) for i in file]
 
 
@@ -22,3 +22,5 @@ def ch2(f):
 
 print(ch1(file))
 print(ch2(file))
+
+

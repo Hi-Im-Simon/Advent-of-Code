@@ -35,7 +35,7 @@ def ch2(b, amount):
         return amount
 
 
-file = open('c:/Code/Advent of Code/2020/inputs/input7.txt').read().split('\n')
+file = open('c:/Code/Advent of Code/2020/inputs/input-07.txt').read().split('\n')
 file = [[f.split(' contain ')[0]] + [f.split(' contain ')[1][:-1].split(', ')] for f in file]
 bag, bags_in_bag, am_of_bags_in_bags = [file[i][0] for i in range(len(file))], [[file[i][1][j][2:] if file[i][1][j][-1] == 's' else file[i][1][j][2:]+'s' for j in range(len(file[i][1]))] for i in range(len(file))], [[int(file[i][1][j][0]) if file[i][1][j][0] != 'n' else 0 for j in range(len(file[i][1]))] for i in range(len(file))]
 

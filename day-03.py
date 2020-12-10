@@ -1,4 +1,4 @@
-file = open('c:/Code/Advent of Code/2020/inputs/input3.txt').readlines()
+file = open('c:/Code/Advent of Code/2020/inputs/input-03.txt').readlines()
 file = [x.strip() for x in file]
 file = [x * int(7 * (len(file) / len(x)) + 1) for x in file]
 

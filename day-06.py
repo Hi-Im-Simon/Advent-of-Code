@@ -21,7 +21,7 @@ def ch2(f):
     return ans
 
 
-file = open('c:/Code/Advent of Code/2020/inputs/input6.txt').read().split('\n\n')
+file = open('c:/Code/Advent of Code/2020/inputs/input-06.txt').read().split('\n\n')
 
 file = [f.split('\n') for f in file]
 print(ch1(file))

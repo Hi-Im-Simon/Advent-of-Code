@@ -20,7 +20,7 @@ def ch2(f):
 
 
 
-file = open('c:/Code/Advent of Code/2020/inputs/input5.txt').readlines()
+file = open('c:/Code/Advent of Code/2020/inputs/input-05.txt').readlines()
 file = [[file[i][:7].replace('F', '0').replace('B', '1'), file[i][7:-1].replace('L', '0').replace('R', '1')] for i in range(len(file))]
 
 ch1(file)

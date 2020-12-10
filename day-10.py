@@ -15,9 +15,8 @@ def ch2():
 
 
 
-f = [0] + sorted([int(x) for x in open('c:/Code/Advent of Code/2020/inputs/i.txt').read().split('\n')])
+f = [0] + sorted([int(x) for x in open('c:/Code/Advent of Code/2020/inputs/input-10.txt').read().split('\n')])
 f += [f[-1] + 3]
 
 print(ch1())
 print(ch2())
-print(f)

@@ -16,7 +16,7 @@ def ch2():
                 return min(f[i:j+1]) + max(f[i:j+1])
 
 
-f = [int(x) for x in open('c:/Code/Advent of Code/2020/inputs/input9.txt').read().split('\n')]
+f = [int(x) for x in open('c:/Code/Advent of Code/2020/inputs/input-09.txt').read().split('\n')]
 preamble_length = 25
 
 print(ch1(preamble_length))

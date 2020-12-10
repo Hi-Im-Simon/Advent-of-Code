@@ -42,7 +42,7 @@ def ch2():
         if ans != False:
             return ans
 
-f = open('c:/Code/Advent of Code/2020/inputs/input8.txt').read().split('\n')
+f = open('c:/Code/Advent of Code/2020/inputs/input-08.txt').read().split('\n')
 f = [[l.split()[0], int(l.split()[1])] for l in f]
 
 print(ch1(0, [0 for _ in range(len(f))], 0))

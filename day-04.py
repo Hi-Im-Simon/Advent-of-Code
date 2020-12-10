@@ -63,6 +63,6 @@ def ch2(f):
     return ans
 
 
-file = open('c:/Code/Advent of Code/2020/inputs/input4.txt').readlines()
+file = open('c:/Code/Advent of Code/2020/inputs/input-04.txt').readlines()
 print(ch1(file))
 print(ch2(file))

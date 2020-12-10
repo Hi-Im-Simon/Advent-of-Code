@@ -1,4 +1,4 @@
-file = open('c:/Code/Advent of Code/2020/inputs/input2.txt').readlines()
+file = open('c:/Code/Advent of Code/2020/inputs/input-02.txt').readlines()
 file = [[x for x in file[i].split()] for i in range(len(file))]
 for i in range(len(file)):
     file[i] = [int(x) for x in file[i][0].split('-')] + [file[i][1][0]] + [file[i][2]]
