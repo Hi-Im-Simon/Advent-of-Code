@@ -1,29 +1,45 @@
-def ch1(f):
+file = open('2020/inputs/input-06.txt')
+f = [x.strip() for x in file.readlines()]
+i = 1
+f[0] = [f[0]]
+while len(f) > i:
+    if f[i] == '':
+        f[i] = []
+        i += 1
+    else:
+        f[i - 1].append(f[i])
+        del f[i]
+
+
+def sum_of_counts(file):
     ans = 0
     for group in file:
-        g = set()
-        for i in range(len(group)):
-            for char in group[i]:
-                g.add(char)
-        ans += len(g)
+        answers = []
+        for member in group:
+            for answer in member:
+                if answer not in answers:
+                    answers.append(answer)
+        ans += len(answers)
     return ans
 
 
-def ch2(f):
+def sum_of_common_counts(file):
     ans = 0
-    for group in f:
-        group[0] = list(group[0])
-        for i in range(1, len(group)):
-            for char in group[0]:
-                if char not in group[i]:
-                    group[0].remove(char)
-        ans += len(group[0])
+    for group in file:
+        answers = list(group[0])
+        i = 0
+        while i < len(answers):
+            for member in group:
+                if answers[i] not in member:
+                    answers.remove(answers[i])
+                    i -= 1
+                    break
+            i += 1
+        ans += len(answers)
     return ans
 
 
-file = open('c:/Code/Advent of Code/2020/inputs/input-06.txt').read().split('\n\n')
+print(sum_of_counts(f))
+print(sum_of_common_counts(f))
 
-file = [f.split('\n') for f in file]
-print(ch1(file))
-# print(ch2(file))   I have no idea what's wrong with this
-print(list(map(sum, (zip(*map(lambda x: (len(set(x.replace("\n", ""))),len(set.intersection(*map(set, x.split("\n"))))), open("c:/Code/Advent of Code/2020/inputs/input6.txt").read().split("\n\n"))))))[1])
+file.close()

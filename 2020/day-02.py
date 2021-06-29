@@ -1,24 +1,33 @@
-file = open('c:/Code/Advent of Code/2020/inputs/input-02.txt').readlines()
-file = [[x for x in file[i].split()] for i in range(len(file))]
-for i in range(len(file)):
-    file[i] = [int(x) for x in file[i][0].split('-')] + [file[i][1][0]] + [file[i][2]]
+file = open('2020/inputs/input-02.txt')
+f = [x.strip().split() for x in file.readlines()]
 
-
-def ch1(f):
+def count_valid_passwords_a(file):
     ans = 0
-    for i in range(len(f)):
-        if f[i][0] <= f[i][3].count(f[i][2]) <= f[i][1]:
+    for line in f:
+        start, end = [int(x) for x in line[0].split('-')]
+        if start <= line[2].count(line[1][0]) <= end:
             ans += 1
     return ans
 
 
-def ch2(f):
+def count_valid_passwords_b(file):
     ans = 0
-    for i in range(len(f)):
-        if (f[i][3][f[i][0]-1] == f[i][2]) != (f[i][3][f[i][1]-1] == f[i][2]):
-            ans += 1
+    for line in f:
+        a, b = [int(x) - 1 for x in line[0].split('-')]
+        letter = line[1][0]
+        code = line[2]
+        count = 0
+        if len(code) > b:
+            if code[a] == letter:
+                count += 1
+            if code[b] == letter:
+                count += 1
+            if count == 1:
+                ans += 1
     return ans
 
 
-print(ch1(file))
-print(ch2(file))
+print(count_valid_passwords_a(f))
+print(count_valid_passwords_b(f))
+
+file.close()

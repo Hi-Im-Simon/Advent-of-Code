@@ -1,26 +1,23 @@
-file = open('c:/Code/Advent of Code/2020/inputs/input-01.txt').readlines()
-file = [int(i[:-1]) for i in file]
+file = open('2020/inputs/input-01.txt')
+f = [int(x[:-1]) for x in file.readlines()]
 
 
-def ch1(f):
-    n = len(f)
-    for i in range(n-1):
-        for j in range(i+1, n):
-            n1, n2 = f[i], f[j]
-            if n1 + n2 == 2020:
-                return n1 * n2
+def find_sum_2(file, s):
+    for i in range(len(file) - 1):
+        for j in range(i + 1, len(file)):
+            if file[i] + file[j] == s:
+                return file[i] * file[j]
 
 
-def ch2(f):
-    n = len(f)
-    for i in range(n-2):
-        for j in range(1, n-1):
-            n1, n2, n3 = f[i], f[j], 2020 - f[i] - f[j]
-            if n3 in f:
-                return n1 * n2 * n3
+def find_sum_3(file, s):
+    for i in range(len(file) - 2):
+        for j in range(i + 1, len(file) - 1):
+            for k in range(j + 1, len(file)):
+                if file[i] + file[j] + file[k] == s:
+                    return file[i] * file[j] * file[k]
 
 
-print(ch1(file))
-print(ch2(file))
+print(find_sum_2(f, 2020))
+print(find_sum_3(f, 2020))
 
-
+file.close()

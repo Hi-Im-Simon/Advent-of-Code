@@ -1,49 +1,55 @@
+file = open('2020/inputs/input-08.txt')
+f = [[x.strip().split(' ')[0], int(x.strip().split(' ')[1])] for x in file.readlines()]
 
-def ch1(i, activ, ans):
-    instr = f[i]
-    if activ[i] == 0:
-        activ[i] = 1
-        if instr[0] == 'nop': 
-            return ch1(i+1, activ, ans)
-        elif instr[0] == 'jmp':
-            return ch1(i+instr[1], activ, ans)
+
+def game_debugger(file):
+    pastInstr = []
+    i, acc = 0, 0
+    while i not in pastInstr:
+        pastInstr.append(i)
+        instr, val = file[i]
+        if instr == 'acc':
+            acc += val
+            i += 1
+        elif instr == 'jmp':
+            i += val
         else:
-            ans += instr[1]
-            return ch1(i+1, activ, ans)
-    else: return ans
+            i += 1
+    return acc
 
 
-def ch2_check(i, activ, ans, f):
-    if i >= len(f): return ans
-    instr = f[i]
-    if activ[i] == 1: return False    
-    else:
-        activ[i] = 1
-        if instr[0] == 'nop':
-            return ch2_check(i+1, activ, ans, f)
-        elif instr[0] == 'jmp':
-            return ch2_check(i+instr[1], activ, ans, f)
+def game_deep_debugger(file):
+    for j in range(len(file)):
+        if file[j][0] == 'nop':
+            file[j][0] = 'jmp'
+        elif file[j][0] == 'jmp':
+            file[j][0] = 'nop'
         else:
-            ans += instr[1]
-            return ch2_check(i+1, activ, ans, f)
+            continue
+        pastInstr = []
+        i, acc = 0, 0
+        while i not in pastInstr:
+            if i == len(file):
+                return acc
+            elif i > len(file):
+                continue
+            else:
+                pastInstr.append(i)
+                instr, val = file[i]            
+                if instr == 'acc':
+                    acc += val
+                    i += 1
+                elif instr == 'jmp':
+                    i += val
+                else:
+                    i += 1
+        if file[j][0] == 'nop':
+            file[j][0] = 'jmp'
+        elif file[j][0] == 'jmp':
+            file[j][0] = 'nop'
 
 
-def ch2():
-    ans = False
-    for i in range(len(f)):
-        if f[i][0] == 'nop':
-            f_c = f.copy()
-            f_c = f[:i] + [['jmp', f[i][1]]] + f[i+1:]
-            ans = ch2_check(0, [0 for _ in range(len(f))], 0, f_c)
-        elif f[i][0] == 'jmp':
-            f_c = f.copy()
-            f_c = f[:i] + [['nop', f[i][1]]] + f[i+1:]
-            ans = ch2_check(0, [0 for _ in range(len(f))], 0, f_c)
-        if ans != False:
-            return ans
+print(game_debugger(f))
+print(game_deep_debugger(f))
 
-f = open('c:/Code/Advent of Code/2020/inputs/input-08.txt').read().split('\n')
-f = [[l.split()[0], int(l.split()[1])] for l in f]
-
-print(ch1(0, [0 for _ in range(len(f))], 0))
-print(ch2())
+file.close()

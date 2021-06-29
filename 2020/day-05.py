@@ -1,27 +1,50 @@
-def find_seat_id(i):
-    row, col = int(file[i][0], 2), int(file[i][1], 2)
-    return row * 8 + col
+file = open('2020/inputs/input-05.txt')
+f = [[x[:7], x[7:].strip()] for x in file.readlines()]
 
-def ch1(f):
+
+def decode(code):
+    ans = []
+    a, b = 0, 127
+    for c in code[0]:
+        if c == 'F':
+            b = (a + b) // 2
+        else:
+            a = (a + b + 1) // 2
+    ans.append(a)
+
+    a, b = 0, 7
+    for c in code[1]:
+        if c == 'L':
+            b = (a + b) // 2
+        else:
+            a = (a + b + 1) // 2
+    ans.append(a)
+    return ans
+
+
+def highest_seat(file):
     ans = 0
-    for i in range(len(f)):
-        seat_id = find_seat_id(i)
-        ans = max(ans, seat_id)
-    print(ans)
+    for seat in file:
+        t = decode(seat)
+        t = t[0] * 8 + t[1]
+        if t > ans:
+            ans = t
+    return ans
 
 
-def ch2(f):
-    seats = []
-    for i in range(len(f)):
-        seats.append(find_seat_id(i))
-    seats = sorted(seats)
-    [print(x) for x in range(seats[0], seats[-1]+1) if x not in seats]
+def find_your_seat(file):
+    seatIds = []
+    for seat in file:
+        t = decode(seat)
+        t = t[0] * 8 + t[1]
+        seatIds.append(t)
+    
+    for i in range(highest_seat(file)):
+        if i not in seatIds and i - 1 in seatIds and i + 1 in seatIds:
+            return i
 
 
+print(highest_seat(f))
+print(find_your_seat(f))
 
-
-file = open('c:/Code/Advent of Code/2020/inputs/input-05.txt').readlines()
-file = [[file[i][:7].replace('F', '0').replace('B', '1'), file[i][7:-1].replace('L', '0').replace('R', '1')] for i in range(len(file))]
-
-ch1(file)
-ch2(file)
+file.close()
