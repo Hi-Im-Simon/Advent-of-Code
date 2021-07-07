@@ -67,7 +67,6 @@ def solve(file):
         val = belongs[minEle][0]
         final[minEle] = val
         del belongs[minEle]
-
         for el in belongs:
             belongs[el].remove(val)
     ans = 1
