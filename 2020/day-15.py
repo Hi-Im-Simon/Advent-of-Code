@@ -6,7 +6,6 @@ def game(file, stop):
     nums = {}
     for i in range(len(file[:-1])):
         nums[file[i]] = i + 1
-
     last = file[-1]
     for i in range(len(file), stop):
         if last not in nums:

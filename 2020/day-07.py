@@ -1,6 +1,7 @@
 file = open('2020/inputs/input-07.txt')
 f = [x.strip()[:-1].split(' bags contain ') for x in file.readlines()]
 bags = {}
+
 for line in f:
     line[1] = line[1].split(', ')
     if line[1][0] != 'no other bags':
