@@ -19,6 +19,7 @@ def game(file, stop):
     return last
 
 
+print(game(f, 2020))
 print(game(f, 30000000))
 
 file.close()

@@ -33,7 +33,6 @@ def how_many_bags_contain(file, bag):
 def count_bags_inside(file, bag):
     ans = 0
     for b in bags[bag]:
-        print(b)
         if b[0] > 0:
             count = count_bags_inside(file, b[1])
             ans += b[0] * count + b[0]
