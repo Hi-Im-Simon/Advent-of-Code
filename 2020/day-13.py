@@ -1,7 +1,4 @@
-from sys import modules
-
-
-file = open('2020/inputs/input-00.txt')
+file = open('2020/inputs/input-13.txt')
 f = [x.strip() for x in file.readlines()]
 f = [int(f[0]), f[1].split(',')]
 
