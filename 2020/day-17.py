@@ -41,7 +41,6 @@ def simulate(file, n):
     return ans
 
 
-
 print(simulate(f, 6))
 
 file.close()
