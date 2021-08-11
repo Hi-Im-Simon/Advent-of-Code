@@ -12,19 +12,21 @@ while i < len(f) - 1:
     msgs.append(f[i])
 
 
-def getMsgs(rules, msgs, rule = '0', word = ''):
-    print(rule, word)
+def getMsgs(rules, msgs, rule = '0'):
+    words = []
     if rule in ['a', 'b']:
-        word += rule
-        return word
-    elif '|' in rules[rule]:
-        a, b = rules[rule][0:2]
-        word += getMsgs(rules, msgs, a)
-        word += getMsgs(rules, msgs, b)
+        return rule
+    for r in rules[rule]:
+        if r != '|':
+            words2 = getMsgs(rules, msgs, r)
+            for w in words2:
+                pass
+
+    if '|' in rules[rule]:
+        pass
     else:
-        for m in rules[rule]:
-            if m != '|':
-                getMsgs(rules, msgs, m)
+        pass
+    return t
 
 
 print(rules, msgs)
