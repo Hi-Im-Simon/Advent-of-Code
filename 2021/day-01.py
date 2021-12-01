@@ -11,8 +11,13 @@ def count_increases(f):
 
 def count_sum_increases(f):
     anss = []
-    for i in range(1, len(f)):
-        pass#TBC
+    ans = 0
+    for i in range(2, len(f)):
+        anss.append(sum([f[i-2], f[i-1], f[i]]))
+    for i in range(1, len(anss)):
+        if anss[i] > anss[i-1]:
+            ans += 1
+    return ans
     
 print('part 1:\n' + str(count_increases(f)))
-#print('part 2:\n' + str(ans2))
+print('part 2:\n' + str(count_sum_increases(f)))
