@@ -32,7 +32,7 @@ def init():
     day_str = [str(day) if len(str(day)) > 1 else '0' + str(day)][0]
 
     f = open(year_path + '\day-' + day_str + '.py', 'w+')
-    f.write("tf = open('" + year + "/inputs/input-00.txt').read()\nf = open('" + year + "/inputs/input-" + day_str + ".txt').read()\n\n\n\nprint(f)\n#print('part 1:\\n' + str(ans1))\n#print('part 2:\\n' + str(ans2))")
+    f.write("tf = [x.strip() for x in open('" + year + "/inputs/input-00.txt').readlines()]\nf = [x.strip() for x in open('" + year + "/inputs/input-" + day_str + ".txt').readlines()]\n\n\n\nprint(f)\n#print('part 1:\\n' + str(ans1))\n#print('part 2:\\n' + str(ans2))")
     f.close()
     open(year_path + '\inputs\input-' + day_str + '.txt', 'w+').close()
 
