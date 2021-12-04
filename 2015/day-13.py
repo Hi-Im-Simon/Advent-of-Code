@@ -1,6 +1,6 @@
 from itertools import permutations
 
-tf = [x.strip().strip('.').split() for x in open('2015/inputs/input-00.txt').readlines()]
+# tf = [x.strip().strip('.').split() for x in open('2015/inputs/input-00.txt').readlines()]
 f = [x.strip().strip('.').split() for x in open('2015/inputs/input-13.txt').readlines()]
 
 
@@ -28,14 +28,9 @@ def optimal_happiness(f, incl=None):
             if person != incl:
                 guests[incl][person] = 0
                 guests[person][incl] = 0
-            
     orders = list(permutations(list(guests)))
     return max([get_happiness(guests, list(x) + [x[0]]) for x in orders])
 
-
-# def optimal_happiness_with_you(f):
-    
-    
 
 print('part 1:\n' + str(optimal_happiness(f)))
 print('part 2:\n' + str(optimal_happiness(f, 'you')))
