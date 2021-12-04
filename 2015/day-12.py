@@ -1,4 +1,4 @@
-tf = eval([x.strip() for x in open('2015/inputs/input-00.txt').readlines()][0])
+# tf = eval([x.strip() for x in open('2015/inputs/input-00.txt').readlines()][0])
 f = eval([x.strip() for x in open('2015/inputs/input-12.txt').readlines()][0])
 
 
