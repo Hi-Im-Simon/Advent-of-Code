@@ -15,8 +15,6 @@ def search_dict(d, ignore_word=None):
         elif tp is str:
             if x == ignore_word:
                 return 0
-        else:
-            print(x)
     return count
     
     
@@ -32,8 +30,6 @@ def seatch_list(l, ignore_word=None):
             count += seatch_list(x, ignore_word)
         elif tp is str:
             pass
-        else:
-            print(x)
     return count
 
 
@@ -45,8 +41,6 @@ def count_all_nums(f, ignore_word=None):
             count += search_dict(x, ignore_word)
         elif tp is list:
             count += seatch_list(x, ignore_word)
-        else:
-            print(x)
     return count
 
 

@@ -1,6 +1,5 @@
-tf = list([x.strip() for x in open('2015/inputs/input-00.txt').readlines()][0])
+# tf = list([x.strip() for x in open('2015/inputs/input-00.txt').readlines()][0])
 f = list([x.strip() for x in open('2015/inputs/input-11.txt').readlines()][0])
-
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 bad_letters = [letters.index('i'), letters.index('o'), letters.index('l')]
