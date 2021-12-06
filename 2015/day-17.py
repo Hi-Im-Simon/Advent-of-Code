@@ -1,4 +1,4 @@
-tf = [int(x.strip()) for x in open('2015/inputs/input-00.txt').readlines()]
+# tf = [int(x.strip()) for x in open('2015/inputs/input-00.txt').readlines()]
 f = [int(x.strip()) for x in open('2015/inputs/input-17.txt').readlines()]
 
 using_c_dict = {}
