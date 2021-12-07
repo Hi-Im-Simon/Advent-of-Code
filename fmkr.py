@@ -33,8 +33,8 @@ def init():
 
     f = open(year_path + '\day-' + day_str + '.py', 'w+')
     p1_str = 'f"part 1:\\n{ part1(f) }"'
-    p2_str = 'f"part 2:\\n{ part2(f) }"''
-    f.write(f"tf = [x.strip() for x in open('{ year }/inputs/input-00.txt').readlines()]\nf = [x.strip() for x in open('{ year }/inputs/input-{ day_str }.txt').readlines()]\n\n\ndef part1(f):\n	return f\n\n\ndef part2(f):\n	return None\n\n\nprint({ p1_str })\nprint({ p2_str })")
+    p2_str = 'f"part 2:\\n{ part2(f) }"'
+    f.write(f"tf = [x.strip() for x in open('{ year }/inputs/input-00.txt').readlines()]\nf = [x.strip() for x in open('{ year }/inputs/input-{ day_str }.txt').readlines()]\n\n\ndef part1(f): return f\n\n\ndef part2(f): return None\n\n\nprint({ p1_str })\nprint({ p2_str })")
     f.close()
     open(year_path + '\inputs\input-' + day_str + '.txt', 'w+').close()
 
