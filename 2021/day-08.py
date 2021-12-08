@@ -1,10 +1,9 @@
-# because otherwise the file gets edited in part1() for absolutely no reason
-def read_file():
-    return [x.strip().split(' | ') for x in open('2021/inputs/input-08.txt').readlines()]
+# tf = [x.strip().split(' | ') for x in open('2021/inputs/input-00.txt').readlines()]
+f = [x.strip().split(' | ') for x in open('2021/inputs/input-08.txt').readlines()]
 
 
-def part1():
-    f = read_file()
+def part1(f):
+    f = [x.copy() for x in f]
     ans = 0
     ts = {8: 'abcdefg', 7: 'acf', 4: 'bcdf', 1: 'cf'}
     # for every line with file
@@ -81,8 +80,7 @@ def what_digit(el, info):
         return '0'
 
 
-def part2():
-    f = read_file()
+def part2(f): 
     ans = 0
     # for every line with file
     for line in f:
@@ -96,5 +94,5 @@ def part2():
     return ans
 
 
-print(f"part 1:\n{ part1() }")
-print(f"part 2:\n{ part2() }")
+print(f"part 1:\n{ part1(f.copy()) }")
+print(f"part 2:\n{ part2(f.copy()) }")
