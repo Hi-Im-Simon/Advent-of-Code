@@ -1,8 +1,10 @@
-tf = [x.strip().split(' | ') for x in open('2021/inputs/input-00.txt').readlines()]
-f = [x.strip().split(' | ') for x in open('2021/inputs/input-08.txt').readlines()]
+# because otherwise the file gets edited in part1() for absolutely no reason
+def read_file():
+    return [x.strip().split(' | ') for x in open('2021/inputs/input-08.txt').readlines()]
 
 
-def part1(f):
+def part1():
+    f = read_file()
     ans = 0
     ts = {8: 'abcdefg', 7: 'acf', 4: 'bcdf', 1: 'cf'}
     # for every line with file
@@ -30,7 +32,6 @@ def get_info(line):
             
             
 def what_digit(el, info):
-    lets = 'abcdefg'
     if len(el) == 2:
         return '1'
     elif len(el) == 4:
@@ -54,6 +55,14 @@ def what_digit(el, info):
         if len(el) == 5:
             if in_1 == True or in_7 == True:
                 return '3'
+            to_4 = 0
+            for p in info[4]:
+                if p not in el:
+                    to_4 += 1
+            if to_4 == 1:
+                return '5'
+            else:
+                return '2'
             
         # 0, 6, 9 - 6
         elif len(el) == 6:
@@ -64,23 +73,16 @@ def what_digit(el, info):
                 for p in info[4]:
                     if p not in el:
                         to_4 += 1
-                if to_4 == 2:
-                    return 9
-                return 0
+                if to_4 == 0:
+                    return '9'
+                else:
+                    return '0'
             return '6'
         return '0'
-        
-    # for t in ts:
-    #     if len(el) == len(ts[t]):
-    #         for e in ts[t]:
-    #             if e not in el:
-    #                 break
-    #         else:
-    #             return str(t)
-    # return '0'
 
 
-def part2(f): 
+def part2():
+    f = read_file()
     ans = 0
     # for every line with file
     for line in f:
@@ -90,10 +92,9 @@ def part2(f):
         # for every digit after |
         for el in line:
             line_ans += what_digit(el, info)
-        print(line_ans)
         ans += int(line_ans)
     return ans
 
 
-print(f"part 1:\n{ part1(f) }")
-print(f"part 2:\n{ part2(tf) }")
+print(f"part 1:\n{ part1() }")
+print(f"part 2:\n{ part2() }")
