@@ -19,7 +19,7 @@ def part1(f):
 
 
 def get_info(line):
-    info = {1: '', 4: '', 7: ''}
+    info = {}
     for el in line:
         if len(el) == 2:
             info[1] = el
@@ -39,60 +39,58 @@ def what_digit(el, info):
         return '7'
     elif len(el) == 7:
         return '8'
-    else:
-        for p in info[1]:
-            if p not in el: in_1 = False; break
-        else: in_1 = True
+    # check if the element has all parts of 1
+    for p in info[1]:
+        if p not in el: 
+            in_1 = False
+            break
+    else: 
+        in_1 = True
+    # check if the element has all parts of 4
+    for p in info[4]:
+        if p not in el: 
+            in_4 = False
+            break
+    else: 
+        in_4 = True
+    # 2, 3, 5 - len=5
+    if len(el) == 5:
+        if in_1:
+            return '3'
+        to_4 = 0
         for p in info[4]:
-            if p not in el: in_4 = False; break
-        else: in_4 = True
-        for p in info[7]:
-            if p not in el: in_7 = False; break
-        else: in_7 = True
-        
-        # 2, 3, 5 - 5
-        if len(el) == 5:
-            if in_1 == True or in_7 == True:
-                return '3'
+            if p not in el:
+                to_4 += 1
+        if to_4 == 1:
+            return '5'
+        return '2'
+    # 0, 6, 9 - len=6
+    elif len(el) == 6:
+        if in_4:
+            return '9'
+        if in_1:
             to_4 = 0
             for p in info[4]:
                 if p not in el:
                     to_4 += 1
-            if to_4 == 1:
-                return '5'
-            else:
-                return '2'
-            
-        # 0, 6, 9 - 6
-        elif len(el) == 6:
-            if in_4 == True:
+            if to_4 == 0:
                 return '9'
-            if in_1 == True or in_7 == True:
-                to_4 = 0
-                for p in info[4]:
-                    if p not in el:
-                        to_4 += 1
-                if to_4 == 0:
-                    return '9'
-                else:
-                    return '0'
-            return '6'
-        return '0'
+            else:
+                return '0'
+        return '6'
 
 
 def part2(f): 
     ans = 0
-    # for every line with file
     for line in f:
         line_ans = ''
         info = get_info(line[0].split() + line[1].split())
         line = line[1].split()
-        # for every digit after |
         for el in line:
             line_ans += what_digit(el, info)
         ans += int(line_ans)
     return ans
 
 
-print(f"part 1:\n{ part1(f.copy()) }")
-print(f"part 2:\n{ part2(f.copy()) }")
+print(f"part 1:\n{ part1(f) }")
+print(f"part 2:\n{ part2(f) }")
