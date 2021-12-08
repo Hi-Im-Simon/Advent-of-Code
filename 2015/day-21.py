@@ -7,7 +7,7 @@ def equip(item, dmg_p, arm_p, gold_spent):
     return dmg_p + item[1], arm_p + item[2], gold_spent + item[0]
 
 
-def part1_and_2(f, result='win'):
+def part1_and_2(f):
     # (cost, damage, armor)
     weapons = [(8, 4, 0), (10, 5, 0), (25, 6, 0), (40, 7, 0), (74, 8, 0)]
     armor = [(0, 0, 0), (13, 0, 1), (31, 0, 2),
