@@ -10,5 +10,6 @@
 
 ### How to use the file/directory maker?
 * Move to a desired directory (cd _directory\_name_)
-* Execute command `py fmkr.py directory_name` (for example "_py fmkr.py 2015_" will create a working directory named 2015)
+* Execute command `py fmkr.py directory_name` (for example "_py fmkr.py 2015_" will create a working directory named 2015) or a file with a number incremented from the previous one if the directory already exists
+* You can add an optional argument like `py fmkr.py directory_name day_number` (for example "_py fmkr.py 2015 6_"), which will create the directory (or just _.py_ and _.txt_ file if the directory already exists) with a corresponding number
 * Add your puzzle input to the _input-xx.txt_ files and start coding!
