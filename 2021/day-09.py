@@ -4,10 +4,10 @@ f = [list(map(int, list(x.strip()))) for x in open('2021/inputs/input-09.txt').r
 
 def prep_input(heatmap):
     for line in heatmap:
-        line.insert(0, 'x')
-        line.append('x')
-    heatmap.insert(0, ['x' for _ in range(len(heatmap[0]))])
-    heatmap.append(['x' for _ in range(len(heatmap[0]))])
+        line.insert(0, 9)
+        line.append(9)
+    heatmap.insert(0, [9 for _ in range(len(heatmap[0]))])
+    heatmap.append([9 for _ in range(len(heatmap[0]))])
     return heatmap
 
 
@@ -17,13 +17,13 @@ def part1(f):
     for y in range(1, len(heatmap)-1):
         for x in range(1, len(heatmap[y])-1):
             val = heatmap[y][x]
-            if heatmap[y-1][x] != 'x' and heatmap[y-1][x] <= val:
+            if heatmap[y-1][x] <= val:
                 continue
-            if heatmap[y][x+1] != 'x' and heatmap[y][x+1] <= val:
+            if heatmap[y][x+1] <= val:
                 continue
-            if heatmap[y+1][x] != 'x' and heatmap[y+1][x] <= val:
+            if heatmap[y+1][x] <= val:
                 continue
-            if heatmap[y][x-1] != 'x' and heatmap[y][x-1] <= val:
+            if heatmap[y][x-1] <= val:
                 continue
             ans += 1 + val
     return ans
@@ -36,13 +36,13 @@ def rec(heatmap, x, y):
     searched.add(x * 100 + y)
     
     size = 1
-    if heatmap[y-1][x] not in ['x', 9]:
+    if heatmap[y-1][x] != 9:
         size += rec(heatmap, x, y-1)
-    if heatmap[y][x+1] not in ['x', 9]:
+    if heatmap[y][x+1] != 9:
         size += rec(heatmap, x+1, y)
-    if heatmap[y+1][x] not in ['x', 9]:
+    if heatmap[y+1][x] != 9:
         size += rec(heatmap, x, y+1)
-    if heatmap[y][x-1] not in ['x', 9]:
+    if heatmap[y][x-1] != 9:
         size += rec(heatmap, x-1, y)
     return size
 
