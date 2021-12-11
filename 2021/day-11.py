@@ -1,4 +1,4 @@
-tf = [list(map(int, list(x.strip()))) for x in open('2021/inputs/input-00.txt').readlines()]
+# tf = [list(map(int, list(x.strip()))) for x in open('2021/inputs/input-00.txt').readlines()]
 f = [list(map(int, list(x.strip()))) for x in open('2021/inputs/input-11.txt').readlines()]
 
 
