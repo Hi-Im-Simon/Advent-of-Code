@@ -30,12 +30,41 @@ def init():
         day = str(sys.argv[2])
     
     day_str = [str(day) if len(str(day)) > 1 else '0' + str(day)][0]
+    
+    open(year_path + '\inputs\input-' + day_str + '.txt', 'w+').close()
 
     f = open(year_path + '\day-' + day_str + '.py', 'w+')
     p1_str = 'f"part 1:\\n{ part1(f) }"'
     p2_str = 'f"part 2:\\n{ part2(f) }"'
-    f.write(f"tf = [x.strip() for x in open('{ year }/inputs/input-00.txt').readlines()]\nf = [x.strip() for x in open('{ year }/inputs/input-{ day_str }.txt').readlines()]\n\n\ndef part1(f): return f\n\n\ndef part2(f): return None\n\n\nprint({ p1_str })\nprint({ p2_str })")
+    f.write(
+f"""
+tf = open('{ year }/inputs/input-00.txt')   # you can put an example input data here
+f = open('{ year }/inputs/input-{ day_str }.txt')    # your input data
+
+
+def prep_input(f):  # edit to adjust how the program reads your files
+    data = [x.strip() for x in f.readlines()]
+    return data
+
+
+def part1(f):
+    data = prep_input(f)
+    
+    
+    return data
+
+
+def part2(f):
+    data = prep_input(f)
+    
+    
+    return None
+
+
+print({ p1_str })
+print({ p2_str })
+""".lstrip())
     f.close()
-    open(year_path + '\inputs\input-' + day_str + '.txt', 'w+').close()
+
 
 init()
