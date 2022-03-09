@@ -38,12 +38,12 @@ def init():
     p2_str = 'f"part 2:\\n{ part2(f) }"'
     f.write(
 f"""
-tf = open('{ year }/inputs/input-00.txt')   # you can put an example input data here
-f = open('{ year }/inputs/input-{ day_str }.txt')    # your input data
+tf = open('{ year }/inputs/input-00.txt').readlines()   # you can put an example input data here
+f = open('{ year }/inputs/input-{ day_str }.txt').readlines()    # your input data
 
 
 def prep_input(f):  # edit to adjust how the program reads your files
-    data = [x.strip() for x in f.readlines()]
+    data = [x.strip() for x in f]
     return data
 
 
