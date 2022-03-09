@@ -1,4 +1,3 @@
-tf = open('2019/inputs/input-00.txt').readlines()   # you can put an example input data here
 f = open('2019/inputs/input-03.txt').readlines()    # your input data
 
 
