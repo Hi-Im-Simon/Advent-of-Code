@@ -1,13 +1,12 @@
 from math import ceil
-from shlex import join
 
 
-tf = open('2021/inputs/input-00.txt')   # you can put an example input data here
-f = open('2021/inputs/input-18.txt')    # your input data
+# tf = open('2021/inputs/input-00.txt').readlines()   # you can put an example input data here
+f = open('2021/inputs/input-18.txt').readlines()    # your input data
 
 
 def prep_input(f):  # edit to adjust how the program reads your files
-    datas = [list(x.strip()) for x in f.readlines()]
+    datas = [list(x.strip()) for x in f]
     val_datas = []
     for i in range(len(datas)):
         depth = 0
@@ -69,23 +68,26 @@ def rec(data):
 def part1(f):
     datas = prep_input(f)
 
-    for _ in range(10):
-        main_data = [x.copy() for x in datas[0]]
-        for i in range(1, len(datas)):
-            if i > 1:
-                for j in range(len(main_data)):
-                    main_data[j][0] += 1
-            main_data = to_snailfish(main_data, [x.copy() for x in datas[i]])
+    main_data = [x.copy() for x in datas[0]]
+    for i in range(1, len(datas)):
+        if i > 1:
+            for j in range(len(main_data)):
+                main_data[j][0] += 1
+        main_data = to_snailfish(main_data, [x.copy() for x in datas[i]])
             
     return rec(main_data)
 
 
 def part2(f):
     data = prep_input(f)
+    ans = 0
     
-    
-    return None
+    for el1 in data:
+        for el2 in data:
+            if el1 != el2:
+                ans = max(ans, rec(to_snailfish([e.copy() for e in el1], [e.copy() for e in el2])))
+    return ans
 
 
-print(f"part 1:\n{ part1(tf) }")
+print(f"part 1:\n{ part1(f) }")
 print(f"part 2:\n{ part2(f) }")
