@@ -1,3 +1,6 @@
+from math import sqrt
+
+
 tf = open('2021/inputs/input-00.txt').readlines()   # you can put an example input data here
 f = open('2021/inputs/input-19.txt').readlines()    # your input data
 
@@ -25,31 +28,57 @@ def part1(f):
         ref_data.append([])
         for i in range(len(scanner) - 1):
             for j in range(i + 1, len(scanner)):
-                ref_data[s].append([scanner[j][x] - scanner[i][x] for x in range(3)])
-    # we have an array of relative placements of all elements to each other
-    cur = 0
-    available = [x for x in range(1, len(data))]
-    options = [(-1, -1, -1), (-1, -1, 1), (-1, 1, -1), (-1, 1, 1), (1, -1, -1), (1, -1, 1), (1, 1, -1), (1, 1, 1)]
-    order_options = [(0, 1, 2), (0, 2, 1), (1, 0, 2), (1, 2, 0), (2, 0, 1), (2, 1, 0)]
+                x, y, z = [abs(scanner[i][t] - scanner[j][t]) for t in range(3)]
+                ref_data[s].append([sqrt(y**2 + sqrt(x**2 + z**2)**2), (i, j)])
+    
+    current, available = 0, [x for x in range(1, len(data))]
     
     while len(available):
         for other in available:
-            for order_option in order_options:
-                for option in options:
-                    count = 0
-                    for line in ref_data[other]:
-                        line = [line[x] for x in order_option]
-                        line = [line[i] * option[i] for i in range(3)]
-                        if line in ref_data[cur]:
-                            print(line)
-                            count += 1
-                    print(count)
-                    if count > 0:
-                        return
+            count = 0
+            cur, new = ref_data[current], ref_data[other]
+            
+            for el1 in new:
+                for el2 in cur:
+                    if el1[0] == el2[0]:
+                        count += 1
+                        element_new = el1[1]
+                        element_old = el2[1]
+                        # print(data[current][element_old[0]], data[current][element_old[1]])
+                        # print(data[other][element_new[0]], data[other][element_new[1]])
+            
+            if count >= 66:
                 
-            return
+                diffr_table_old = [data[current][element_old[0]][z] - data[current][element_old[1]][z] for z in range(3)]
+                diffr_table_new = [data[other][element_new[0]][z] - data[other][element_new[1]][z] for z in range(3)]
+                print(data[current][element_old[0]], data[current][element_old[1]], diffr_table_old)
+                print(data[other][element_new[0]], data[other][element_new[1]], diffr_table_new)
+                order_table = []
+                for i in range(len(diffr_table_old)):
+                    for j in range(len(diffr_table_new)):
+                        if abs(diffr_table_old[i]) == abs(diffr_table_new[j]):
+                            order_table.append(j)                        
+                neg_table = [1 if diffr_table_old[i] == diffr_table_new[i] else -1 for i in range(3)]
+                
+                print(order_table, neg_table)
+                
+                old_el = data[current][element_old[0]]
+                new_el = [data[other][element_new[0]][i] * neg_table[i] for i in order_table]
+                
+                for i in range(3):
+                    print(-(diffr_table_old[i] - old_el[i] - new_el[i]))
+                
+                print(old_el)
+                print(new_el)
+                
+                
+                
+                current = other
+                available.remove(other)
+                print(available)
+                break
     
-    return ref_data
+    return
 
 
 def part2(f):
