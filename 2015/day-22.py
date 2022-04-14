@@ -1,115 +1,126 @@
-f = [int(x.strip().split()[-1]) for x in open('2015/inputs/input-22.txt').readlines()]
+tf = open('2015/inputs/input-00.txt').readlines()   # you can put an example input data here
+f = open('2015/inputs/input-22.txt').readlines()    # your input data
 
 
-def check_mana_used(mana_used):
-    global min_mana_used
-    min_mana_used = min(min_mana_used, mana_used)
+BASE_HP, BASE_DMG = [int(x.split()[-1]) for x in f]
+SPELLS = {'Magic Missile': 53, 'Drain': 73, 'Shield': 113, 'Poison': 173, 'Recharge': 229}
+MIN_MANA_USED = float('inf')
 
-def rec(hp_p, mana_p, hp_b, mana_used, active_effects, turn='player'):
-    global dmg_b_0, arm_p_0
+class Entity:
+    def __init__(self, hp, mana, dmg, armor=0, effects={}, mana_spent=0):
+        self.hp = hp
+        self.mana = mana
+        self.dmg = dmg
+        self.armor = armor
+        self.effects = effects
+        self.mana_spent = mana_spent
+
+
+def turn(num, Player, Boss, flag):    
+    message = f'- Player has {Player.hp} hit points, {Player.armor} armor, {Player.mana} mana\n- Boss has {Boss.hp} hit points'
     
-    # for RPG
-    t_m, t_hpb = mana_p, hp_b
-    
-    # I HATE THIS, BUT IT HAS TO BE DONE FOR SOME REASON
-    active_effects = active_effects.copy()
-    # apply currently active effects
-    if active_effects['shield'] > 0:
-        dmg_b = max(dmg_b_0 - arm_p_0 - 7, 1)
-    else:
-        dmg_b = dmg_b_0 - arm_p_0
-    if active_effects['poison'] > 0:
-        hp_b -= 3
-    if active_effects['recharge'] > 0:
-        mana_p += 101
-    
-    # active effect wear off
-    for eff in ['shield', 'poison', 'recharge']:
-        if active_effects[eff] > 0:
-            active_effects[eff] -= 1
-    
-    # check if boss dies from poison
-    if hp_b <= 0:
-        check_mana_used(mana_used)
-        return
-    
-    # if player's turn
-    if turn == 'player':
-        # cast a spell and attack as a boss
-        if mana_p >= 53:
-            if hp_b - 4 <= 0:
-                check_mana_used(mana_used)
-                return
-            # print(f'\n-- {turn} turn --')
-            # print(f'Player: hp={hp_p}, mana={t_m}')
-            # print(f'Boss: hp={t_hpb}')
-            # print(f'{active_effects}\nCast: Magic Missile')
-            rec(hp_p, mana_p-53, hp_b-4, mana_used+53, active_effects, 'boss')
-        if mana_p >= 73:
-            if hp_b - 2 <= 0:
-                check_mana_used(mana_used)
-                return
-            # print(f'\n-- {turn} turn --')
-            # print(f'Player: hp={hp_p}, mana={t_m}')
-            # print(f'Boss: hp={t_hpb}')
-            # print(f'{active_effects}\nCast: Drain')
-            rec(hp_p+2, mana_p-73, hp_b-2, mana_used+73, active_effects, 'boss')
-        if mana_p >= 113 and not active_effects['shield']:
-            a_e = active_effects.copy()
-            a_e['shield'] = 6
-            # print(f'\n-- {turn} turn --')
-            # print(f'Player: hp={hp_p}, mana={t_m}')
-            # print(f'Boss: hp={t_hpb}')
-            # print(f'{active_effects}\nCast: Shield')
-            rec(hp_p, mana_p-113, hp_b, mana_used+113, a_e, 'boss')
-        if mana_p >= 173 and not active_effects['poison']:
-            a_e = active_effects.copy()
-            a_e['poison'] = 6
-            # print(f'\n-- {turn} turn --')
-            # print(f'Player: hp={hp_p}, mana={t_m}')
-            # print(f'Boss: hp={t_hpb}')
-            # print(f'{active_effects}\nCast: Poison')
-            rec(hp_p, mana_p-173, hp_b, mana_used+173, a_e, 'boss')
-        if mana_p >= 229 and not active_effects['recharge']:
-            a_e = active_effects.copy()
-            a_e['recharge'] = 5
-            # print(f'\n-- {turn} turn --')
-            # print(f'Player: hp={hp_p}, mana={t_m}')
-            # print(f'Boss: hp={t_hpb}')
-            # print(f'{active_effects}\nCast: Recharge')
-            rec(hp_p, mana_p-229, hp_b, mana_used+229, a_e, 'boss')
+    def apply_effects():
+        if 'Shield' in Player.effects:
+            Player.armor = 7
         else:
+            Player.armor = 0
+        if 'Recharge' in Player.effects:
+            Player.mana += 101
+        if 'Poison' in Boss.effects:
+            Boss.hp -= 3
+            
+        # remove worn off effects
+        for Ent in [Player, Boss]:
+            for effect in list(Ent.effects):
+                Ent.effects[effect] -= 1
+                if Ent.effects[effect] == 0:
+                    del Ent.effects[effect]
+                    if ALERTS: print(f'{effect} wears off.')
+                else:
+                    if ALERTS: print(f'{effect} timer is now {Ent.effects[effect]}.')
+        
+    def cast(spell_id):
+        if Player.mana < SPELLS[spell_id] or spell_id in Player.effects or spell_id in Boss.effects:
+            return 0
+        
+        if ALERTS: print(f'Player casts {spell_id}.')
+        Player.mana -= SPELLS[spell_id]
+        Player.mana_spent += SPELLS[spell_id]
+        
+        match spell_id:
+            case 'Magic Missile':
+                Boss.hp -= 4
+            case 'Drain':
+                Boss.hp -= 2
+                Player.hp += 2
+            case 'Shield':
+                Player.effects[spell_id] = 6
+            case 'Poison':
+                Boss.effects[spell_id] = 6
+            case 'Recharge':
+                Player.effects[spell_id] = 5
+        return 1
+        
+    def end_fight():
+        if Boss.hp <= 0:
+            global MIN_MANA_USED
+            if WIN_ALERTS: print(f'PLAYER WINS! MANA USED: { Player.mana_spent, MIN_MANA_USED }')
+            MIN_MANA_USED = min(MIN_MANA_USED, Player.mana_spent)
+            return True
+        elif Player.hp <= 0:
+            if ALERTS: print('player loses')
+            return True
+        else:
+            return False
+    
+    def copy(Obj):
+            return Entity(Obj.hp, Obj.mana, Obj.dmg, Obj.armor, Obj.effects.copy(), Obj.mana_spent)
+    
+    if num % 2:
+        if flag == 'HARD':
+            Player.hp -= 1
+            if end_fight(): return
+            
+        if ALERTS: print(f'\n-- Player turn -- ({ num })\n{ message }')
+        apply_effects()
+        if end_fight(): return
+        
+        if Player.mana < min(SPELLS.values()):
             return
         
-    # if boss' turn
-    elif turn == 'boss':
-        if hp_p - dmg_b <= 0:
-            return
-        # print(f'\n-- {turn} turn --')
-        # print(f'Player: hp={hp_p}, mana={t_m}')
-        # print(f'Boss: hp={t_hpb}')
-        # print(f'{active_effects}')
-        rec(hp_p-dmg_b, mana_p, hp_b, mana_used, active_effects, 'player')
+        for spell in SPELLS:
+            if spell in ['Magic Missile', 'Drain'] and Boss.hp > 10 and 'Poison' not in Boss.effects.keys():
+                continue
+            P_old, B_old = copy(Player), copy(Boss)
+            if cast(spell) and not end_fight():
+                turn(num + 1, Player, Boss, flag)
+            Player, Boss = P_old, B_old
+        
+    else:
+        if ALERTS: print(f'\n-- Boss turn -- ({ num })\n{ message }')
+        apply_effects()
+        if end_fight(): return
+        
+        boss_dmg = max(Boss.dmg - Player.armor, 1)
+        if ALERTS: print(f'Boss attacks for { boss_dmg } damage!')
+        Player.hp -= boss_dmg
+        if end_fight(): return
+        
+        turn(num + 1, Player, Boss, flag)
+    
+
+def part1_and_2(flag=''):
+    global MIN_MANA_USED
+    MIN_MANA_USED = float('inf')
+    
+    Player = Entity(50, 500, 0)
+    Boss = Entity(BASE_HP, 0, BASE_DMG)
+    
+    turn(1, Player, Boss, flag)
+    return MIN_MANA_USED
 
 
-def part1():
-    active_effects = {
-        'shield': 0,
-        'poison': 0,
-        'recharge': 0
-    }
-    global hp_p_0, mana_p_0, hp_b_0
-    rec(hp_p_0, mana_p_0, hp_b_0, 0, active_effects)
-    global min_mana_used
-    return min_mana_used
-
-
-def part2(f): return None
-
-
-min_mana_used = float('inf')
-hp_b_0, dmg_b_0 = f[0], f[1]
-hp_p_0, arm_p_0, mana_p_0 = 50, 0, 500
-
-print(f"part 1:\n{ part1() }")
-print(f"part 2:\n{ part2(f) }")
+ALERTS = False
+WIN_ALERTS = False
+print(f"part 1:\n{ part1_and_2() }")
+print(f"part 2:\n{ part1_and_2(flag='HARD') }")
