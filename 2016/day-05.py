@@ -37,5 +37,5 @@ def part2(f):
     return ''.join(password)
 
 
-# print(f"part 1:\n{ part1(f) }") # takes a few seconds
+print(f"part 1:\n{ part1(f) }") # takes a few seconds
 print(f"part 2:\n{ part2(f) }") # takes even longer
