@@ -1,4 +1,4 @@
-tf = open('2016/inputs/input-00.txt').readlines()   # you can put an example input data here
+# tf = open('2016/inputs/input-00.txt').readlines()   # you can put an example input data here
 f = open('2016/inputs/input-02.txt').readlines()    # your input data
 
 
