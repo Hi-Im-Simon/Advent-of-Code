@@ -1,9 +1,8 @@
-tf = open('2016/inputs/input-00.txt').readlines()   # you can put an example input data here
+# tf = open('2016/inputs/input-00.txt').readlines()   # you can put an example input data here
 f = open('2016/inputs/input-06.txt').readlines()    # your input data
 
 
 ALPH = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-
 
 
 def prep_input(f):  # edit to adjust how the program reads your files
