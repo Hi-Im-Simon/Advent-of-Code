@@ -1,4 +1,4 @@
-tf = open('2022/inputs/input-00.txt').readlines()   # you can put an example input data here
+# tf = open('2022/inputs/input-00.txt').readlines()   # you can put an example input data here
 f = open('2022/inputs/input-03.txt').readlines()    # your input data
 
 
@@ -19,8 +19,6 @@ def part1(f):
         r1, r2 = d[:len(d) // 2], d[len(d) // 2:]
         common = ord(''.join(set(r1).intersection(r2)))
         ans += out_from_ord(common)
-
-    
     return ans
 
 
@@ -30,8 +28,6 @@ def part2(f):
     for d in range(0, len(data), 3):
         common = ord(''.join(set(data[d]).intersection(data[d+1]).intersection(data[d+2])))
         ans += out_from_ord(common)
-    
-    
     return ans
 
 
