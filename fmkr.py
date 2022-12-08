@@ -43,7 +43,7 @@ f = open('{ year }/inputs/input-{ day_str }.txt').readlines()    # your input da
 
 
 def prep_input(f):  # edit to adjust how the program reads your files
-    data = [x.strip() for x in f]
+    data = [x.rstrip() for x in f]
     return data
 
 
