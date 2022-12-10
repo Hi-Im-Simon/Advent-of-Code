@@ -59,4 +59,5 @@ def part2(f):
 cycle, X, sig_str = 1, 1, 0
 print(f"part 1:\n{ part1(f) }")
 cycle, X = 1, 1
-print(f"part 2:\n{ part2(f) }")
+print("part 2:")
+part2(f)
