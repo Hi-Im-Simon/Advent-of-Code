@@ -14,47 +14,39 @@ def string_to_md5(string):
     return m.hexdigest()
 
 
-def part1(f):
+def vals_to_md5(string, num, repeat=1):
+    global HASHES
+    if len(HASHES) > num:
+        return HASHES[num]
+    m = string + str(num)
+    for _ in range(repeat):
+        m = string_to_md5(m)
+    HASHES.append(m)
+    return m
+
+
+def parts1_2(f, repeat=1):
     data = prep_input(f)
-    triplets = dict()
-    ans = 0
     indices = set()
     
     i = 0
-    while True:
-        md5 = string_to_md5(data + str(i))
-        
-        for j in range(2, len(md5)-2):
-            if (md5[j-2] == md5[j-1] == md5[j] == md5[j+1] == md5[j+2]):
-                for k in triplets[md5[j]]:
-                    if i - k < 1000:
-                        print(i, k)
-                        ans += 1
-                        indices.add(k)
-                        break
-                # break
-        if ans >= 64:
-            return max(indices), sorted(indices)
-        # if i == 22728: 
-        #     print(md5)
-        #     return
-        
+    while len(indices) < 64:
+        md5 = vals_to_md5(data, i, repeat)
+
         for j in range(1, len(md5)-1):
             if md5[j-1] == md5[j] == md5[j+1]:
-                if md5[j] in triplets.keys():
-                    triplets[md5[j]].append(i)
-                else:
-                    triplets[md5[j]] = [i]
-                break   # because we only consider the first triplet
+                for k in range(1, 1001):
+                    md52 = vals_to_md5(data, i + k, repeat)
+                    if md5[j]*5 in md52:
+                        indices.add(i)
+                break
+                    
         i += 1
+    return sorted(indices)[-1]
 
 
-def part2(f):
-    data = prep_input(f)
-    
-    
-    return None
+HASHES = []
+print(f"part 1:\n{ parts1_2(f) }")
+HASHES = []
+print(f"part 2:\n{ parts1_2(f, 2017) }")   # this will take a while
 
-
-print(f"part 1:\n{ part1(tf) }")
-print(f"part 2:\n{ part2(f) }")
