@@ -51,36 +51,29 @@ class Monkey:
         self.inspections += 1
         return self.throw[not (self.items[0] % self.div)]
     
+    
+def _solve(monkeys, repeats, func):
+    for _ in range(repeats):
+        for monkey in monkeys:
+            for _ in monkey.items:
+                new_monkey = monkey.calc(func)
+                monkeys[new_monkey].items.append(monkey.items[0])
+                monkey.items = monkey.items[1:]
+
+    inspections = sorted([monkey.inspections for monkey in monkeys])
+    return inspections[-1] * inspections[-2]
+    
 
 def part1(f):
     monkeys = prep_input(f)
-    
-    for _ in range(20):
-        for monkey in monkeys:
-            for _ in monkey.items:
-                new_monkey = monkey.calc(lambda x: x // 3)
-                monkeys[new_monkey].items.append(monkey.items[0])
-                monkey.items = monkey.items[1:]
-            
-    inspections = sorted([monkey.inspections for monkey in monkeys])
-    return inspections[-1] * inspections[-2]
+    return _solve(monkeys, 20, lambda x: x // 3)
     
 
 
 def part2(f):
     monkeys = prep_input(f)
-    
     common_div = max(math.lcm(*[monkey.div for monkey in monkeys]), 1)
-
-    for _ in range(10000):
-        for monkey in monkeys:
-            for _ in monkey.items:
-                new_monkey = monkey.calc(lambda x: x % common_div)
-                monkeys[new_monkey].items.append(monkey.items[0])
-                monkey.items = monkey.items[1:]
-
-    inspections = sorted([monkey.inspections for monkey in monkeys])
-    return inspections[-1] * inspections[-2]
+    return _solve(monkeys, 10000, lambda x: x % common_div)
 
 
 print(f"part 1:\n{ part1(f) }")
