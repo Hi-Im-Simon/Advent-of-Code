@@ -6,7 +6,7 @@ class Valve:
     def __init__(self, flow, valves):
         self.flow = flow
         self.valves = valves
-
+        
 
 def prep_input(f):  # edit to adjust how the program reads your files
     data = dict()
@@ -17,72 +17,83 @@ def prep_input(f):  # edit to adjust how the program reads your files
 
 
 def part1(f):
-    times = dict({ i: 0 for i in range(40) })
-    valves = prep_input(f)
-    ans = [0]
+    data = prep_input(f)
     
-    def rec(time, cur='AA', flown=0, opened=set()):
-        if flown < times[time + 1]:
+    def rec(cur, timer=1, flown=0, opened=set()):
+        # calculate current minute's flow
+        flown += sum([data[x].flow for x in opened])
+        
+        # if current flow is highest, save it
+        global answers
+        answers[timer] = max(answers[timer], flown)
+        
+        # if current flow is lower than the highest 2 steps ago, abort
+        if answers[timer - 2] > flown or timer == MAX_TIME:
             return
-        elif flown > times[time]:
-            times[time] = flown
-        opened = opened.copy()
-        if not time:
-            if flown > ans[0]:
-                ans[0] = flown
+        
+        if cur not in opened and data[cur].flow > 0:
+            opened_copy = opened.copy()
+            opened_copy.add(cur)
+            rec(cur, timer + 1, flown, opened_copy)
         else:
-            flown += sum([valves[v].flow for v in opened])
-            for v in valves[cur].valves:
-                rec(time - 1, v, flown, opened)
-            if valves[cur].flow and not (cur in opened):
-                opened.add(cur)
-                rec(time - 1, cur, flown, opened)
+            for v in data[cur].valves:
+                rec(v, timer + 1, flown, opened)
     
-    rec(30)
-    return ans[0]
+    rec('AA')
+    return answers[MAX_TIME]
 
 
 def part2(f):
-    times = dict({ i: 0 for i in range(40) })
-    valves = prep_input(f)    
-    relevant_valves_count = sum([1 if valves[v].flow else 0 for v in valves])
-    ans = [0]
+    data = prep_input(f)
     
-    def rec(time, curP='AA', curE='AA', flown=0, opened=set()):
-        if flown < times[time + 1]:
-            return
-        elif flown > times[time]:
-            times[time] = flown
+    def rec(curP, curE, timer=5, flown=0, opened=set(), pathP=['AA'], pathE=['AA']):
+            # calculate current minute's flow
+            flown += sum([data[x].flow for x in opened])
             
-        if not time:
-            if flown > ans[0]:
-                ans[0] = flown
-        elif len(opened) >= relevant_valves_count:
-            flown += (sum([valves[v].flow for v in opened]) * time)
-            if flown > ans[0]:
-                ans[0] = flown
-        else:
-            flown += sum([valves[v].flow for v in opened])
+            # if current flow is highest, save it
+            global answers
+            answers[timer] = max(answers[timer], flown)
             
-            vPs = valves[curP].valves.copy()
-            if valves[curP].flow and not (curP in opened):
-                vPs.append(curP)
-            vEs = valves[curE].valves.copy()
-            if valves[curE].flow and not (curE in opened):
-                vEs.append(curE)
-                
-            for vP in vPs:
-                for vE in vEs:
-                    new_opened = opened.copy()
-                    if vP == curP:
-                        new_opened.add(curP)
-                    if vE == curE:
-                        new_opened.add(curE)
-                    rec(time - 1, vP, vE, flown, new_opened)
-    
-    rec(26)
-    return ans[0]
+            # if current flow is lower than the highest 2 steps ago, abort
+            if answers[timer - 2] > flown:
+                return
+            
+            if timer == MAX_TIME:
+                print(pathP)
+                return
+                    
+            if curP not in opened and data[curP].flow > 0:
+                opened_copy = opened.copy()
+                if curE not in opened and data[curE].flow > 0:
+                    # they can both open
+                    if curP != curE:
+                        opened_copy.add(curP)
+                        opened_copy.add(curE)
+                        rec(curP, curE, timer + 1, flown, opened_copy, pathP + [curP], pathE + [curE])
+                        return
+                        
+                opened_copy.add(curP)
+                for vE in data[curE].valves:
+                    if curP != vE:
+                        rec(curP, vE, timer + 1, flown, opened_copy, pathP + [curP], pathE + [vE])
+            elif curE not in opened and data[curE].flow > 0:
+                opened_copy = opened.copy()
+                opened_copy.add(curE)
+                for vP in data[curP].valves:
+                    if vP != curE:
+                        rec(vP, curE, timer + 1, flown, opened_copy, pathP + [vP], pathE + [curE])
+            else:
+                for vP in data[curP].valves:
+                    for vE in data[curE].valves:
+                        if vP != vE:
+                            rec(vP, vE, timer + 1, flown, opened, pathP + [vP], pathE + [vE])
+    global MAX_TIME
+    rec('AA', 'AA')
+    return answers[MAX_TIME]
 
 
+MAX_TIME = 15
+answers = [0] * (MAX_TIME + 1)
 # print(f"part 1:\n{ part1(f) }")
-print(f"part 2:\n{ part2(f) }")
+answers = [0] * (MAX_TIME + 1)
+print(f"part 2:\n{ part2(tf) }")
