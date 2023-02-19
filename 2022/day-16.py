@@ -19,81 +19,109 @@ def prep_input(f):  # edit to adjust how the program reads your files
 def part1(f):
     data = prep_input(f)
     
-    def rec(cur, timer=1, flown=0, opened=set()):
+    def rec(cur, m, e, timer=1, flown=0, opened=set(), my_cur=None, my_flown=None, my_opened=None):
+        global CUR_MAX
+        if timer == m:
+            my_cur = cur
+            my_flown = flown
+            my_opened = opened
+        elif timer == e:
+            if flown > CUR_MAX:
+                global best_cur, best_flown, best_opened
+                CUR_MAX = flown
+                best_cur = my_cur
+                best_flown = my_flown
+                best_opened = my_opened
+            return
+        
         # calculate current minute's flow
         flown += sum([data[x].flow for x in opened])
-        
-        # if current flow is highest, save it
-        global answers
-        answers[timer] = max(answers[timer], flown)
-        
-        # if current flow is lower than the highest 2 steps ago, abort
-        if answers[timer - 2] > flown or timer == MAX_TIME:
-            return
         
         if cur not in opened and data[cur].flow > 0:
             opened_copy = opened.copy()
             opened_copy.add(cur)
-            rec(cur, timer + 1, flown, opened_copy)
+            rec(cur, m, e, timer + 1, flown, opened_copy, my_cur, my_flown, my_opened)
         else:
             for v in data[cur].valves:
-                rec(v, timer + 1, flown, opened)
+                rec(v, m, e, timer + 1, flown, opened, my_cur, my_flown, my_opened)
     
-    rec('AA')
-    return answers[MAX_TIME]
-
+    for i in range(0, MAX_TIME, sample_out):
+        print(min(sample_out + i, MAX_TIME), min(sample_size + i, MAX_TIME))
+        if sample_out + i >= MAX_TIME:
+            break
+        rec(best_cur, sample_out + i, sample_size + i, i, best_flown, best_opened)
+        # print(i)
+        # print(best_cur)
+        # print(best_flown)
+        # print(best_opened)
+        # print('-----')
+    return best_flown
 
 def part2(f):
     data = prep_input(f)
     
-    def rec(curP, curE, timer=5, flown=0, opened=set(), pathP=['AA'], pathE=['AA']):
-            # calculate current minute's flow
-            flown += sum([data[x].flow for x in opened])
-            
-            # if current flow is highest, save it
-            global answers
-            answers[timer] = max(answers[timer], flown)
-            
-            # if current flow is lower than the highest 2 steps ago, abort
-            if answers[timer - 2] > flown:
-                return
-            
-            if timer == MAX_TIME:
-                print(pathP)
-                return
+    def rec(curP, curE, m, e, timer=1, flown=0, opened=set(), my_curP=None, my_curE=None, my_flown=None, my_opened=None):
+        global CUR_MAX
+        if timer == m:
+            my_curP = curP
+            my_curE = curE
+            my_flown = flown
+            my_opened = opened
+        elif timer == e:
+            if flown > CUR_MAX:
+                global best_curP, best_curE, best_flown, best_opened
+                CUR_MAX = flown
+                best_curP = curP
+                best_curE = curE
+                best_flown = my_flown
+                best_opened = my_opened
+            return
+        
+        # calculate current minute's flow
+        flown += sum([data[x].flow for x in opened])
+                
+        if curP not in opened and data[curP].flow > 0:
+            opened_copy = opened.copy()
+            if curE not in opened and data[curE].flow > 0:
+                # they can both open
+                if curP != curE:
+                    opened_copy.add(curP)
+                    opened_copy.add(curE)
+                    rec(curP, curE, m, e, timer + 1, flown, opened_copy, my_curP, my_curE, my_flown, my_opened)
+                    return
                     
-            if curP not in opened and data[curP].flow > 0:
-                opened_copy = opened.copy()
-                if curE not in opened and data[curE].flow > 0:
-                    # they can both open
-                    if curP != curE:
-                        opened_copy.add(curP)
-                        opened_copy.add(curE)
-                        rec(curP, curE, timer + 1, flown, opened_copy, pathP + [curP], pathE + [curE])
-                        return
-                        
-                opened_copy.add(curP)
+            opened_copy.add(curP)
+            for vE in data[curE].valves:
+                if curP != vE:
+                    rec(curP, vE, m, e, timer + 1, flown, opened_copy, my_curP, my_curE, my_flown, my_opened)
+        elif curE not in opened and data[curE].flow > 0:
+            opened_copy = opened.copy()
+            opened_copy.add(curE)
+            for vP in data[curP].valves:
+                if vP != curE:
+                    rec(vP, curE, m, e, timer + 1, flown, opened_copy, my_curP, my_curE, my_flown, my_opened)
+        else:
+            for vP in data[curP].valves:
                 for vE in data[curE].valves:
-                    if curP != vE:
-                        rec(curP, vE, timer + 1, flown, opened_copy, pathP + [curP], pathE + [vE])
-            elif curE not in opened and data[curE].flow > 0:
-                opened_copy = opened.copy()
-                opened_copy.add(curE)
-                for vP in data[curP].valves:
-                    if vP != curE:
-                        rec(vP, curE, timer + 1, flown, opened_copy, pathP + [vP], pathE + [curE])
-            else:
-                for vP in data[curP].valves:
-                    for vE in data[curE].valves:
-                        if vP != vE:
-                            rec(vP, vE, timer + 1, flown, opened, pathP + [vP], pathE + [vE])
-    global MAX_TIME
-    rec('AA', 'AA')
-    return answers[MAX_TIME]
+                    if vP != vE:
+                        rec(vP, vE, m, e, timer + 1, flown, opened, my_curP, my_curE, my_flown, my_opened)
+                        
+    for i in range(5, MAX_TIME, sample_out):
+        rec(best_curP, bestE_curE, min(sample_out + i, MAX_TIME), min(sample_size + i, MAX_TIME), i, best_flown, best_opened)
+        print(i)
+        print(best_curP, best_curE)
+        print(best_flown)
+        print(best_opened)
+        print('-----')
+    return best_flown
 
 
-MAX_TIME = 15
-answers = [0] * (MAX_TIME + 1)
-# print(f"part 1:\n{ part1(f) }")
-answers = [0] * (MAX_TIME + 1)
-print(f"part 2:\n{ part2(tf) }")
+sample_size, sample_out = 10, 2
+MAX_TIME = 30
+
+CUR_MAX = 0
+best_cur, best_flown, best_opened = 'AA', 0, set()
+print(f"part 1:\n{ part1(f) }")
+CUR_MAX = 0
+best_curP, bestE_curE, best_flown, best_opened = 'AA', 'AA', 0, set()
+# print(f"part 2:\n{ part2(tf) }")
