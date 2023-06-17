@@ -1,7 +1,7 @@
 # Advent-of-Code #
 
 ## _fmkr.py_ file - the file-maker
-The file-maker was created to ease the first steps of solving AoC puzzles without having to worry about saving input files, file-reading, creating basic functions etc.
+The file-maker was created to automate the first steps of solving AoC puzzles without having to worry about saving input files, file-reading, creating basic functions etc.
 ### What does the file/directory maker do?
 * Scrapes your AoC session cookie
 * Downloads your puzzle data from AoC API and saves it
