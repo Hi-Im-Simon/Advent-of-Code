@@ -107,8 +107,8 @@ f"""{DEFAULT_HEADER.strip()}
 
 
 class Day{ day }:
-    def __init__(self, use_example: bool = False) -> None:
-        with open(f"{{__file__}}/../{{('example-' if use_example else '')}}inputs/input-{file_number}.txt", 'r'
+    def __init__(self, use_example_input: bool = False) -> None:
+        with open(f"{{__file__}}/../{{('example-' if use_example_input else '')}}inputs/input-{file_number}.txt", 'r'
         ) as file:
             # edit to adjust how the program reads your files
             self.data = [x.rstrip() for x in file.readlines()]
