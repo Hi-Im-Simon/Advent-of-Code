@@ -13,7 +13,7 @@ import numpy as np
 
 # error messages
 ARG_ERR = """Error: Invalid arguments.\n\nScript accepts 2 argumets:
-- year: int - a year valid for AoC
+- year: int - puzzle year valid for AoC
 - day: int (optional) - between 1 and 25(included), if not provided, the next one in chosen year will be taken\n"""
 
 AOC_ERR = """Error: Cannot communicate with AoC API.\n
