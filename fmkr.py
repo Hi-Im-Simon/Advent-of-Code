@@ -25,7 +25,7 @@ Files for the final day in chosen year already exist.
 Choose a different year or provide a specific day as another argument if you want to add or overwrite one of the days.
 """
 
-PATH = '.'
+PATH = os.path.dirname(__file__)
 
 
 def init():
