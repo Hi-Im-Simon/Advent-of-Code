@@ -14,3 +14,5 @@ The file-maker was created to automate the first steps of solving AoC puzzles wi
 * If you want to create or rewrite files from year YYYY and day DD:
   * Execute `py fmkr.py YYYY DD` (for example "_py fmkr.py 2015 7_")
 * Open `day-DD.py` file and start coding!
+
+Note: The AoC API is buggy and example inputs are sometimes some random values from puzzle's info file. You might have to input them manually.
