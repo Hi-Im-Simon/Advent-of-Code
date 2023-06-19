@@ -60,12 +60,13 @@ def init():
     ):
         if not (input('This file already exists. Overwrite with base data? (Y/n) ').upper() == 'Y'):
             exit('Script cancelled.')
-            
+    
+    # remove sys args to avoid aocd error
+    del sys.argv[1:]
     
     # try scraping AoC session cookie if it doesnt exist yet
     try:
-        if not len(aocd.cookies.get_working_tokens()):
-            aocd.cookies.scrape_session_tokens()
+        aocd.cookies.scrape_session_tokens()
     except Exception:
         exit(AOC_ERR)
     
@@ -75,7 +76,7 @@ def init():
         puzzle = Puzzle(year=year, day=day)
     except aocd.exceptions.PuzzleLockedError:
         exit(ARG_ERR)
-    except Exception:
+    except Exception as err:
         exit(AOC_ERR)
 
     # create missing directories and files
