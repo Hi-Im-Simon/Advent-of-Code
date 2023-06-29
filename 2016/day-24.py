@@ -11,13 +11,46 @@ class Day24:
             self.data = [[int(y) if y.isnumeric() else y for y in x.rstrip()] for x in file.readlines()]
             self.start: tuple[int, int] = [(self.data[y].index(0), y) for y in range(len(self.data)) if 0 in self.data[y]][0]
             self.data = [[(-1 if char == '#' else (0 if char == '.' else char)) for char in line] for line in self.data]
+            self.points: dict[int, tuple[int, int]] = {0: self.start}
+            
+            for y in range(len(self.data)):
+                for x in range(len(self.data[y])):
+                    if self.data[y][x] > 0:
+                        self.points[self.data[y][x]] = (x, y)
+            self.points = dict(sorted(self.points.items()))
 
     def part1(self):
-        self.print_maze(self.data)
+        # self.print_maze(self.data)
         maze = self.optimize_maze([l.copy() for l in self.data])
-        # self.print_maze(maze)
-    
-        return None
+        self.print_maze(maze)
+        min_lens = {point0: {point1: sys.maxsize for point1 in self.points.keys() if point0 != point1} for point0 in self.points.keys()}
+        max_skip_len = sys.maxsize # if length is higher than this value, skip
+        
+        def bfs(x: int, y: int, path: list[tuple[int, int]]) -> int:
+            nonlocal max_skip_len
+            if len(path) >= max_skip_len or len(path) > 100:
+                return
+            # if found a point
+            if maze[y][x] > 0 and maze[y][x] != point0:
+                point1 = maze[y][x]
+                if len(path) < min_lens[point0][point1]:
+                    min_lens[point0][point1] = len(path)
+                    max_skip_len = max(min_lens[point0].values())
+                    print(min_lens[point0])
+            
+            # all neighs
+            neighs: list[tuple[int, int]] = [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]
+            
+            for xx, yy in neighs:
+                if (maze[yy][xx] >= 0) and ((xx, yy) not in path):
+                    bfs(xx, yy, path + [(x, y)])
+        
+        for point0 in self.points.keys():
+            bfs(*self.points[point0], [])
+            break
+            print('!!!!!!!!!!!!!!!!!')
+                    
+        return min_lens
 
     def part2(self):
     
@@ -25,7 +58,6 @@ class Day24:
     
     def optimize_maze(self, maze: list[list[int]]) -> list[list[int]]:
         visited: set[tuple[int, int]] = set()
-        weirds = set()
         
         # return 1 if is a wall, 0 if not
         def bfs(x: int, y: int) -> int:
@@ -34,7 +66,7 @@ class Day24:
                 return 1
             
             # all neighs
-            neighs: list[tuple[int, int]] = [(xx, yy) for (xx, yy) in [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]]
+            neighs: list[tuple[int, int]] = [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]
             
             visited.add((x, y))
             
@@ -43,7 +75,7 @@ class Day24:
                 if (xx, yy) not in visited:
                     n_walls += bfs(xx, yy)
             
-            if n_walls == 3 and maze[y][x] <= 0:
+            if n_walls == 3 and maze[y][x] <= 0 and (x, y) != self.start:
                 maze[y][x] = -1
                 return 1
             return 0
