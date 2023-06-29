@@ -1,5 +1,6 @@
-from colorama import Fore, Back, Style
-import sys
+from colorama import Fore
+import itertools, sys
+
 sys.setrecursionlimit(int(1e6))
 
 
@@ -8,53 +9,68 @@ class Day24:
         with open(f"{__file__}/../{('example-' if use_example_input else '')}inputs/input-24.txt", 'r'
         ) as file:
             # edit to adjust how the program reads your files
-            self.data = [[int(y) if y.isnumeric() else y for y in x.rstrip()] for x in file.readlines()]
-            self.start: tuple[int, int] = [(self.data[y].index(0), y) for y in range(len(self.data)) if 0 in self.data[y]][0]
-            self.data = [[(-1 if char == '#' else (0 if char == '.' else char)) for char in line] for line in self.data]
+            data = [[int(y) if y.isnumeric() else y for y in x.rstrip()] for x in file.readlines()]
+            self.start: tuple[int, int] = [(data[y].index(0), y) for y in range(len(data)) if 0 in data[y]][0]
+            data = [[(-1 if char == '#' else (0 if char == '.' else char)) for char in line] for line in data]
             self.points: dict[int, tuple[int, int]] = {0: self.start}
             
-            for y in range(len(self.data)):
-                for x in range(len(self.data[y])):
-                    if self.data[y][x] > 0:
-                        self.points[self.data[y][x]] = (x, y)
+            for y in range(len(data)):
+                for x in range(len(data[y])):
+                    if data[y][x] > 0:
+                        self.points[data[y][x]] = (x, y)
             self.points = dict(sorted(self.points.items()))
+            self.maze = self.optimize_maze(data)
 
-    def part1(self):
-        # self.print_maze(self.data)
-        maze = self.optimize_maze([l.copy() for l in self.data])
-        self.print_maze(maze)
-        min_lens = {point0: {point1: sys.maxsize for point1 in self.points.keys() if point0 != point1} for point0 in self.points.keys()}
-        max_skip_len = sys.maxsize # if length is higher than this value, skip
+    def part1(self, return_to_0: bool = False):
+        # self.print_maze(maze)
+        dists: dict[dict[int]] = {point0: {point1: 0 for point1 in self.points.keys()} 
+                                  for point0 in self.points.keys()}
         
-        def bfs(x: int, y: int, path: list[tuple[int, int]]) -> int:
-            nonlocal max_skip_len
-            if len(path) >= max_skip_len or len(path) > 100:
-                return
-            # if found a point
-            if maze[y][x] > 0 and maze[y][x] != point0:
-                point1 = maze[y][x]
-                if len(path) < min_lens[point0][point1]:
-                    min_lens[point0][point1] = len(path)
-                    max_skip_len = max(min_lens[point0].values())
-                    print(min_lens[point0])
-            
-            # all neighs
-            neighs: list[tuple[int, int]] = [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]
-            
-            for xx, yy in neighs:
-                if (maze[yy][xx] >= 0) and ((xx, yy) not in path):
-                    bfs(xx, yy, path + [(x, y)])
-        
+        # calculate the matrix of distances
         for point0 in self.points.keys():
-            bfs(*self.points[point0], [])
-            break
-            print('!!!!!!!!!!!!!!!!!')
+            visited: set[tuple[int, int]] = set()
+            cur_points: set[tuple[int, int]] = set([self.points[point0]])
+            
+            path_len = 0
+            while len(cur_points) > 0:
+                new_points = set()
+                for (x, y) in cur_points:
+                    visited.add((x, y))
+                    if (self.maze[y][x] > 0) and (self.maze[y][x] != point0) and (not dists[point0][self.maze[y][x]]):
+                        dists[point0][self.maze[y][x]] = path_len
+                        dists[self.maze[y][x]][point0] = path_len
                     
-        return min_lens
+                    neighs: list[tuple[int, int]] = [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]
+                    for xx, yy in neighs:
+                        if (self.maze[yy][xx] >= 0) and ((xx, yy) not in visited):
+                            new_points.add((xx, yy))
+                cur_points = new_points
+                path_len += 1
+        
+        # generate permutations (skip first element cuz its always the starting point)
+        keys = list(self.points.keys())
+        keys.remove(0)
+        permutations = itertools.permutations(keys)
+        
+        # find the shortest path
+        shortest_path = sys.maxsize        
+        for perm in permutations:
+            # add starting point to the list
+            perm = [0] + list(perm)
+            # part 2: add starting point as the last to return to it
+            if return_to_0: perm = perm + [0]
+            
+            path = 0
+            for i in range(len(perm) - 1):
+                path += dists[perm[i]][perm[i+1]]
+            if path < shortest_path:
+                shortest_path = path
+                
+        return shortest_path
 
     def part2(self):
     
-        return None
+        return self.part1(return_to_0=True)
     
     def optimize_maze(self, maze: list[list[int]]) -> list[list[int]]:
         visited: set[tuple[int, int]] = set()
