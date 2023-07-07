@@ -131,5 +131,6 @@ print(f"Part 2:\\n{{d.part2()}}")
 """)
     exit('Script completed successfully.')
 
+
 if __name__ == '__main__':
     init()
